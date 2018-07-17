@@ -28,25 +28,31 @@ namespace TollCalculator.Implementation
             _config = config;
             _currencyCode = config.CurrencyCode;
         }
-        public Money Calculate(IVehicle vehicle, PassBy passBy)
+        public Money Calculate(IVehicle vehicle, Occurrence occurrence)
         {
             if (_tollFreeVehiclesService.IsTollFree(vehicle))
                 return Money.Zero(_currencyCode);
-            if(_tollFreeDateService.IsTollFree(passBy.Date))
+
+            if(_tollFreeDateService.IsTollFree(occurrence.Date))
                 return Money.Zero(_currencyCode);
-            var fee= _feeRuleRepository.GetAll()
-                         .FirstOrDefault(spec => spec.IsSatisfied(passBy))?.Fee
-                   ?? Money.Zero(_currencyCode);
+
+            var matcingRule = _feeRuleRepository.GetAll()
+                .FirstOrDefault(spec => spec.IsSatisfied(occurrence));
+
+            var fee = matcingRule?.Fee ?? Money.Zero(_currencyCode);
+
             return TruncateFeeExceedsHigestPerDay(fee);
         }
 
-        public Money Calculate(IVehicle vehicle, IEnumerable<PassBy> passes)
+        public Money Calculate(IVehicle vehicle, IEnumerable<Occurrence> passes)
         {
 
             var sortedPasses = passes.ToList();
-            sortedPasses.Sort(PassBy.Compare);
+            sortedPasses.Sort(Occurrence.Compare);
+
             var passesPerDay = sortedPasses
                 .GroupBy(_uniqueDayOfYear);
+
             var feesPerDay = new List<Money>();
             foreach (var dayPasses in passesPerDay) {
                 feesPerDay.Add(GetFeeForDay(vehicle, dayPasses));
@@ -57,10 +63,10 @@ namespace TollCalculator.Implementation
                 .Sum(fee => fee.Value),_currencyCode);
         }
 
-        private Money GetFeeForDay(IVehicle vehicle,  IEnumerable<PassBy> dayPasses)
+        private Money GetFeeForDay(IVehicle vehicle,  IEnumerable<Occurrence> dayPasses)
         {
             var feeForDay = Money.Zero(_currencyCode);
-            var passBysInRange = new List<PassBy>();
+            var passBysInRange = new List<Occurrence>();
             TimeRange timeRange = null;
             foreach (var dayPass in dayPasses)
             {
@@ -90,14 +96,14 @@ namespace TollCalculator.Implementation
 
         private Money TruncateFeeExceedsHigestPerDay(Money fee) => fee > _config.MaxFeePerDay ? _config.MaxFeePerDay : fee;
 
-
-        private TimeRange GetTimeRange(PassBy firstPassage)
+         
+        private TimeRange GetTimeRange(Occurrence firstPassage)
         {
-            var firstPassageTime = new Time(firstPassage.Date.Hour, firstPassage.Date.Minute);
+            var firstPassageTime = Time.CreateFrom(firstPassage.Date);
             return new TimeRange(firstPassageTime, _config.FeeGroupingRange);
         }
 
-        private readonly Func<PassBy, string> _uniqueDayOfYear = pass => $"{pass.Date.Year}:{pass.Date.Month}:{pass.Date.Day}";
+        private readonly Func<Occurrence, string> _uniqueDayOfYear = pass => $"{pass.Date.Year}:{pass.Date.Month}:{pass.Date.Day}";
 
     }
 }

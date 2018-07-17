@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
-using TollCalculator.Domain;
+﻿using NUnit.Framework;
+using TollCalculator.Domain.Models;
+using TollCalculator.Domain.Services;
 using TollCalculator.Implementation;
 
 namespace TollCalculator.Tests
@@ -15,7 +13,7 @@ namespace TollCalculator.Tests
             var fee = Money.CreateSek(100);
             var sut = CreateSut(fee);
 
-            var actual = sut.IsSatisfied(PassBy.Parse("2013-01-05 06:05"));
+            var actual = sut.IsSatisfied(Occurrence.Parse("2013-01-05 06:05"));
 
             Assert.IsTrue(actual);
             Assert.AreEqual(fee, sut.Fee);
@@ -26,7 +24,7 @@ namespace TollCalculator.Tests
             var fee = Money.CreateSek(100);
             var sut = CreateSut(fee);
 
-            var actual = sut.IsSatisfied(PassBy.Parse("2013-01-05 06:30"));
+            var actual = sut.IsSatisfied(Occurrence.Parse("2013-01-05 06:30"));
 
             Assert.IsFalse(actual);
             Assert.AreEqual(fee, sut.Fee);

@@ -4,6 +4,7 @@ using System.Text;
 using FakeItEasy;
 using NUnit.Framework;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Services;
 using TollCalculator.Implementation;
 
 namespace TollCalculator.Tests

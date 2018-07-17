@@ -1,4 +1,4 @@
-﻿namespace TollCalculator.Domain
+﻿namespace TollCalculator.Domain.Models
 {
     public enum CurrencyCode
     {

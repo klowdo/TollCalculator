@@ -5,7 +5,7 @@ namespace TollCalculator.Domain.Services
 {
     public interface ITollCalculator
     {
-        Money Calculate(IVehicle vehicle, PassBy passBy);
-        Money Calculate(IVehicle vehicle, IEnumerable<PassBy> passes);
+        Money Calculate(IVehicle vehicle, Occurrence occurrence);
+        Money Calculate(IVehicle vehicle, IEnumerable<Occurrence> passes);
     }
 }

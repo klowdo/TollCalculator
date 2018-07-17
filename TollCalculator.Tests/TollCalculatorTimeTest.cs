@@ -4,6 +4,8 @@ using System.Text;
 using FakeItEasy;
 using NUnit.Framework;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Models;
+using TollCalculator.Domain.Services;
 using TollCalculator.Implementation;
 
 namespace TollCalculator.Tests
@@ -24,7 +26,7 @@ namespace TollCalculator.Tests
             var sut = CreateSut();
             var normalVehicle = A.Dummy<IVehicle>();
 
-            var expected = sut.Calculate(normalVehicle, PassBy.Parse(passage));
+            var expected = sut.Calculate(normalVehicle, Occurrence.Parse(passage));
 
             return expected;
         }

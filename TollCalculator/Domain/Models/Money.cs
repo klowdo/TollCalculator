@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TollCalculator.Domain
+namespace TollCalculator.Domain.Models
 {
     public sealed class Money
     {

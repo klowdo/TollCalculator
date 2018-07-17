@@ -1,4 +1,6 @@
-﻿namespace TollCalculator.Domain
+﻿using TollCalculator.Domain.Models;
+
+namespace TollCalculator.Domain.Services
 {
     public interface ITollFreeVehiclesService
     {

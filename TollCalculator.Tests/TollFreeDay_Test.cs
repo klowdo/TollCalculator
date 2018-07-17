@@ -2,6 +2,8 @@
 using FakeItEasy;
 using NUnit.Framework;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Models;
+using TollCalculator.Domain.Services;
 using TollCalculator.Implementation;
 
 namespace TollCalculator.Tests
@@ -29,7 +31,7 @@ namespace TollCalculator.Tests
         [TestCase("2013-12-31 06:00")]
         public void When_GetTollFee_TollFreeDate_ReturnsZeroFee(string passage)
         {
-            var passBy = PassBy.Parse(passage);
+            var passBy = Occurrence.Parse(passage);
             var sut = CreateSut(passBy.Date);
             var normalVehicle = A.Fake<IVehicle>();
 
@@ -37,7 +39,7 @@ namespace TollCalculator.Tests
 
             Assert.AreEqual(Money.Zero(CurrencyCode.SEK), actual);
 
-            actual = sut.Calculate(normalVehicle, new PassBy(passBy.Date.AddHours(1)));
+            actual = sut.Calculate(normalVehicle, new Occurrence(passBy.Date.AddHours(1)));
             Assert.AreNotEqual(Money.Zero(CurrencyCode.SEK), actual);
         }
 
@@ -45,7 +47,7 @@ namespace TollCalculator.Tests
         {
             var feeRuleRepo = A.Fake<IFeeRuleRepository>();
             var truthySpec = A.Fake<IPassFeeRuleSpecification>();
-            A.CallTo(() => truthySpec.IsSatisfied(A<PassBy>._))
+            A.CallTo(() => truthySpec.IsSatisfied(A<Occurrence>._))
                 .Returns(true);
             A.CallTo(() => truthySpec.Fee)
                 .Returns(Money.CreateSek(100));

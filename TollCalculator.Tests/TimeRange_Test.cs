@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Models;
 
 namespace TollCalculator.Tests
 {

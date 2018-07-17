@@ -4,27 +4,29 @@ using System.Linq;
 using FakeItEasy;
 using NUnit.Framework;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Models;
+using TollCalculator.Domain.Services;
 using TollCalculator.Implementation;
 
 namespace TollCalculator.Tests
 {
     public class TollFreeVehicles_Test
     {
-        [TestCase(VehicleType.Tractor)]
-        [TestCase(VehicleType.Motorbike)]
-        [TestCase(VehicleType.Tractor)]
-        [TestCase(VehicleType.Emergency)]
-        [TestCase(VehicleType.Diplomat)]
-        [TestCase(VehicleType.Foreign)]
-        [TestCase(VehicleType.Military)]
-        public void When_Calculate_TollFreeVehicle_RetursZero(VehicleType vehicleType)
+        [TestCase(TollFreeVehicleTypes.Tractor)]
+        [TestCase(TollFreeVehicleTypes.Motorbike)]
+        [TestCase(TollFreeVehicleTypes.Tractor)]
+        [TestCase(TollFreeVehicleTypes.Emergency)]
+        [TestCase(TollFreeVehicleTypes.Diplomat)]
+        [TestCase(TollFreeVehicleTypes.Foreign)]
+        [TestCase(TollFreeVehicleTypes.Military)]
+        public void When_Calculate_TollFreeVehicle_RetursZero(TollFreeVehicleTypes tollFreeVehicleTypes)
         {
             var sut = CreateSut();
             var vehicle = A.Fake<IVehicle>();
             A.CallTo(() => vehicle.VehicleType)
-                .Returns(vehicleType.ToString());
+                .Returns(tollFreeVehicleTypes.ToString());
 
-            var actual = sut.Calculate(vehicle, A.Dummy<PassBy>());
+            var actual = sut.Calculate(vehicle, A.Dummy<Occurrence>());
 
             Assert.AreEqual(Money.Zero(CurrencyCode.SEK), actual);
         }
@@ -39,7 +41,7 @@ namespace TollCalculator.Tests
             A.CallTo(() => vehicle.VehicleType)
                 .Returns(vehicleType);
 
-            var actual = sut.Calculate(vehicle, A.Dummy<PassBy>());
+            var actual = sut.Calculate(vehicle, A.Dummy<Occurrence>());
 
             Assert.AreNotEqual(Money.Zero(CurrencyCode.SEK), actual);
         }
@@ -49,7 +51,7 @@ namespace TollCalculator.Tests
         {
             var feeRuleRepo = A.Fake<IFeeRuleRepository>();
             var truthySpec = A.Fake<IPassFeeRuleSpecification>();
-            A.CallTo(() => truthySpec.IsSatisfied(A<PassBy>._))
+            A.CallTo(() => truthySpec.IsSatisfied(A<Occurrence>._))
                 .Returns(true);
             A.CallTo(() => truthySpec.Fee)
                 .Returns(Money.CreateSek(60));
@@ -60,13 +62,13 @@ namespace TollCalculator.Tests
 
             var freeVehicleTypes = new List<string>
             {
-                VehicleType.Tractor.ToString(),
-                VehicleType.Motorbike.ToString(),
-                VehicleType.Tractor.ToString(),
-                VehicleType.Emergency.ToString(),
-                VehicleType.Diplomat.ToString(),
-                VehicleType.Foreign.ToString(),
-                VehicleType.Military.ToString(),
+                TollFreeVehicleTypes.Tractor.ToString(),
+                TollFreeVehicleTypes.Motorbike.ToString(),
+                TollFreeVehicleTypes.Tractor.ToString(),
+                TollFreeVehicleTypes.Emergency.ToString(),
+                TollFreeVehicleTypes.Diplomat.ToString(),
+                TollFreeVehicleTypes.Foreign.ToString(),
+                TollFreeVehicleTypes.Military.ToString(),
             };
 
 

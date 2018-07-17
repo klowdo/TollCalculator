@@ -5,6 +5,8 @@ using System.Text;
 using FakeItEasy;
 using NUnit.Framework;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Models;
+using TollCalculator.Domain.Services;
 using TollCalculator.Implementation;
 
 namespace TollCalculator.Tests
@@ -22,7 +24,7 @@ namespace TollCalculator.Tests
                 passFeeRules:feeRule
             );
 
-            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<PassBy>());
+            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<Occurrence>());
 
 
             Assert.AreEqual(Money.Zero(CurrencyCode.SEK), actual);
@@ -39,7 +41,7 @@ namespace TollCalculator.Tests
                 passFeeRules:feeRule
             );
 
-            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<PassBy>());
+            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<Occurrence>());
 
             Assert.AreEqual(Money.Zero(CurrencyCode.SEK), actual);
         }
@@ -49,7 +51,7 @@ namespace TollCalculator.Tests
         {
             var sut = CreateSut();
 
-            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<PassBy>());
+            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<Occurrence>());
 
             Assert.AreEqual(Money.Zero(CurrencyCode.SEK), actual);
         }
@@ -65,7 +67,7 @@ namespace TollCalculator.Tests
                 passFeeRules: feeRule
             );
 
-            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<PassBy>());
+            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<Occurrence>());
 
             Assert.AreEqual(expectedMoney, actual);
         }
@@ -86,7 +88,7 @@ namespace TollCalculator.Tests
               passFeeRules:  new [] { feeRule1, feeRule2 }
             );
 
-            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<PassBy>());
+            var actual = sut.Calculate(A.Dummy<IVehicle>(), A.Dummy<Occurrence>());
 
             Assert.AreEqual(expectedMoney, actual);
         }
@@ -102,8 +104,8 @@ namespace TollCalculator.Tests
 
             var sut = CreateSut(passFeeRules: feeRule);
 
-            var passBy1 = PassBy.Parse("2018-07-12 06:30");
-            var passBy2 = new PassBy(passBy1.Date.AddMinutes(30));
+            var passBy1 = Occurrence.Parse("2018-07-12 06:30");
+            var passBy2 = new Occurrence(passBy1.Date.AddMinutes(30));
 
             var actual = sut.Calculate(A.Dummy<IVehicle>(), new[] {passBy1, passBy2});
 
@@ -122,8 +124,8 @@ namespace TollCalculator.Tests
 
             var sut = CreateSut(passFeeRules: feeRule);
 
-            var passBy1 = PassBy.Parse("2018-07-12 06:30");
-            var passBy2 = new PassBy(passBy1.Date.AddHours(2));
+            var passBy1 = Occurrence.Parse("2018-07-12 06:30");
+            var passBy2 = new Occurrence(passBy1.Date.AddHours(2));
 
             var passBys = new[] { passBy1, passBy2 };
             var actual = sut.Calculate(A.Dummy<IVehicle>(), passBys);
@@ -142,8 +144,8 @@ namespace TollCalculator.Tests
 
             var sut = CreateSut(passFeeRules: feeRule);
 
-            var passBy1 = PassBy.Parse("2018-07-12 06:30");
-            var passBy2 = new PassBy(passBy1.Date.AddHours(2));
+            var passBy1 = Occurrence.Parse("2018-07-12 06:30");
+            var passBy2 = new Occurrence(passBy1.Date.AddHours(2));
 
             var passBys = new[] { passBy1, passBy2 };
             var actual = sut.Calculate(A.Dummy<IVehicle>(), passBys);
@@ -162,9 +164,9 @@ namespace TollCalculator.Tests
 
             var sut = CreateSut(passFeeRules: feeRule);
 
-            var passBy1 = PassBy.Parse("2018-07-12 06:30");
-            var passBy2 = new PassBy(passBy1.Date.AddHours(2));
-            var passBy3 = new PassBy(passBy1.Date.AddDays(1));
+            var passBy1 = Occurrence.Parse("2018-07-12 06:30");
+            var passBy2 = new Occurrence(passBy1.Date.AddHours(2));
+            var passBy3 = new Occurrence(passBy1.Date.AddDays(1));
 
             var passBys = new[] { passBy1, passBy2, passBy3 };
             var actual = sut.Calculate(A.Dummy<IVehicle>(), passBys);

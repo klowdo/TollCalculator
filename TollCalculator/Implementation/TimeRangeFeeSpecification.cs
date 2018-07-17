@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TollCalculator.Domain;
+﻿using TollCalculator.Domain.Models;
+using TollCalculator.Domain.Services;
 
 namespace TollCalculator.Implementation
 {
@@ -14,7 +12,7 @@ namespace TollCalculator.Implementation
             _timeRange = timeRange;
             Fee = fee;
         }
-        public bool IsSatisfied(PassBy input) => _timeRange.IsInRange(input.Date);
+        public bool IsSatisfied(Occurrence input) => _timeRange.IsInRange(input.Date);
 
         public Money Fee { get; }
     }

@@ -1,6 +1,6 @@
-﻿namespace TollCalculator
+﻿namespace TollCalculator.Tests
 {
-        public enum VehicleType
+        public enum TollFreeVehicleTypes
         {
             Motorbike = 0,
             Tractor = 1,

@@ -1,5 +1,6 @@
 ﻿using System;
 using TollCalculator.Domain;
+using TollCalculator.Domain.Models;
 
 namespace TollCalculator.Implementation
 {
